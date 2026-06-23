@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { SIPNumber, Carrier, WireGuardConfig, PortConfig, AsteriskConfig, SystemSettings, DashboardStats, Extension, OVHConfig, Tenant, CallRecord, CarrierRate, ServerIp } from '../types';
+import { SIPNumber, Carrier, WireGuardConfig, PortConfig, AsteriskConfig, SystemSettings, DashboardStats, Extension, OVHConfig, Tenant, CallRecord, CarrierRate, ServerIp, SmsGatewayConfig, SmsPricing, SmsRecord, SmsCampaign } from '../types';
 
 interface DataContextType {
   tenants: Tenant[]; addTenant: (t: Omit<Tenant, 'id' | 'createdAt' | 'updatedAt'>) => void; updateTenant: (id: string, u: Partial<Tenant>) => void; deleteTenant: (id: string) => void;
@@ -14,6 +14,11 @@ interface DataContextType {
   extensions: Extension[]; addExtension: (e: Omit<Extension, 'id' | 'createdAt' | 'updatedAt'>) => void; updateExtension: (id: string, u: Partial<Extension>) => void; deleteExtension: (id: string) => void;
   ovhConfig: OVHConfig | null; updateOVHConfig: (c: Omit<OVHConfig, 'id' | 'createdAt'>) => void;
   settings: SystemSettings | null; updateSettings: (s: Partial<SystemSettings>) => void;
+  // SMS
+  smsGateways: SmsGatewayConfig[]; addSmsGateway: (g: Omit<SmsGatewayConfig, 'id' | 'createdAt' | 'updatedAt'>) => void; updateSmsGateway: (id: string, u: Partial<SmsGatewayConfig>) => void; deleteSmsGateway: (id: string) => void;
+  smsPricing: SmsPricing[]; addSmsPricing: (p: Omit<SmsPricing, 'id'>) => void; updateSmsPricing: (id: string, u: Partial<SmsPricing>) => void; deleteSmsPricing: (id: string) => void;
+  smsRecords: SmsRecord[]; addSmsRecord: (r: Omit<SmsRecord, 'id'>) => void;
+  smsCampaigns: SmsCampaign[]; addSmsCampaign: (c: Omit<SmsCampaign, 'id' | 'createdAt' | 'updatedAt'>) => void; updateSmsCampaign: (id: string, u: Partial<SmsCampaign>) => void; deleteSmsCampaign: (id: string) => void;
   stats: DashboardStats; refreshStats: () => void;
 }
 
@@ -47,14 +52,18 @@ export function DataProvider({ children }: { children: ReactNode }) {
   const [extensions, setExt] = useState<Extension[]>([]);
   const [ovhConfig, setOVH] = useState<OVHConfig | null>(null);
   const [settings, setSettings] = useState<SystemSettings | null>(null);
+  const [smsGateways, setSmsG] = useState<SmsGatewayConfig[]>([]);
+  const [smsPricing, setSmsP] = useState<SmsPricing[]>([]);
+  const [smsRecords, setSmsR] = useState<SmsRecord[]>([]);
+  const [smsCampaigns, setSmsC] = useState<SmsCampaign[]>([]);
 
   useEffect(() => {
     const saved = localStorage.getItem('iptsp_data_v3');
-    if (saved) { try { const d = JSON.parse(saved); setTenants(d.tenants||[]); setServerIps(d.serverIps||[]); setSip(d.sipNumbers||[]); setCar(d.carriers||[]); setCRates(d.carrierRates||[]); setCalls(d.callRecords||[]); setWG(d.wg||[]); setPort(d.port||[]); setAst(d.ast||[]); setExt(d.ext||[]); setOVH(d.ovh||null); setSettings(d.settings||null); } catch { initDefaults(); } }
+    if (saved) { try { const d = JSON.parse(saved); setTenants(d.tenants||[]); setServerIps(d.serverIps||[]); setSip(d.sipNumbers||[]); setCar(d.carriers||[]); setCRates(d.carrierRates||[]); setCalls(d.callRecords||[]); setWG(d.wg||[]); setPort(d.port||[]); setAst(d.ast||[]); setExt(d.ext||[]); setOVH(d.ovh||null); setSettings(d.settings||null); setSmsG(d.smsGateways||[]); setSmsP(d.smsPricing||[]); setSmsR(d.smsRecords||[]); setSmsC(d.smsCampaigns||[]); } catch { initDefaults(); } }
     else initDefaults();
   }, []);
 
-  useEffect(() => { localStorage.setItem('iptsp_data_v3', JSON.stringify({ tenants, serverIps, sipNumbers, carriers, carrierRates, callRecords, wg:wireGuardConfigs, port:portConfigs, ast:asteriskConfigs, ext:extensions, ovh:ovhConfig, settings })); }, [tenants, serverIps, sipNumbers, carriers, carrierRates, callRecords, wireGuardConfigs, portConfigs, asteriskConfigs, extensions, ovhConfig, settings]);
+  useEffect(() => { localStorage.setItem('iptsp_data_v3', JSON.stringify({ tenants, serverIps, sipNumbers, carriers, carrierRates, callRecords, wg:wireGuardConfigs, port:portConfigs, ast:asteriskConfigs, ext:extensions, ovh:ovhConfig, settings, smsGateways, smsPricing, smsRecords, smsCampaigns })); }, [tenants, serverIps, sipNumbers, carriers, carrierRates, callRecords, wireGuardConfigs, portConfigs, asteriskConfigs, extensions, ovhConfig, settings, smsGateways, smsPricing, smsRecords, smsCampaigns]);
 
   const initDefaults = () => {
     const t1 = 't1', t2 = 't2', t3 = 't3';
@@ -167,6 +176,16 @@ export function DataProvider({ children }: { children: ReactNode }) {
   const deleteExtension = (id:string) => setExt(p=>p.filter(e=>e.id!==id));
   const updateOVHConfig = (c: Omit<OVHConfig,'id'|'createdAt'>) => setOVH(prev=>prev?{...prev,...c}:{...c,id:gid(),createdAt:now()});
   const updateSettings = (s: Partial<SystemSettings>) => setSettings(prev=>prev?{...prev,...s}:null);
+  const addSmsGateway = (g: Omit<SmsGatewayConfig,'id'|'createdAt'|'updatedAt'>) => setSmsG(p=>[...p,{...g,id:gid(),createdAt:now(),updatedAt:now()}]);
+  const updateSmsGateway = (id:string, u:Partial<SmsGatewayConfig>) => setSmsG(p=>p.map(g=>g.id===id?{...g,...u,updatedAt:now()}:g));
+  const deleteSmsGateway = (id:string) => setSmsG(p=>p.filter(g=>g.id!==id));
+  const addSmsPricing = (pr: Omit<SmsPricing,'id'>) => setSmsP(prev=>[...prev,{...pr,id:gid()}]);
+  const updateSmsPricing = (id:string, u:Partial<SmsPricing>) => setSmsP(p=>p.map(r=>r.id===id?{...r,...u}:r));
+  const deleteSmsPricing = (id:string) => setSmsP(p=>p.filter(r=>r.id!==id));
+  const addSmsRecord = (r: Omit<SmsRecord,'id'>) => setSmsR(p=>[...p,{...r,id:gid()}]);
+  const addSmsCampaign = (c: Omit<SmsCampaign,'id'|'createdAt'|'updatedAt'>) => setSmsC(p=>[...p,{...c,id:gid(),createdAt:now(),updatedAt:now()}]);
+  const updateSmsCampaign = (id:string, u:Partial<SmsCampaign>) => setSmsC(p=>p.map(c=>c.id===id?{...c,...u,updatedAt:now()}:c));
+  const deleteSmsCampaign = (id:string) => setSmsC(p=>p.filter(c=>c.id!==id));
 
   const stats: DashboardStats = {
     totalNumbers: sipNumbers.length, activeNumbers: sipNumbers.filter(n=>n.status==='active').length,
@@ -181,7 +200,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <DataContext.Provider value={{ tenants, addTenant, updateTenant, deleteTenant, serverIps, addServerIp, updateServerIp, deleteServerIp, sipNumbers, addSIPNumber, updateSIPNumber, deleteSIPNumber, carriers, addCarrier, updateCarrier, deleteCarrier, carrierRates, addCarrierRate, updateCarrierRate, deleteCarrierRate, callRecords, addCallRecord, wireGuardConfigs, addWireGuardConfig, updateWireGuardConfig, deleteWireGuardConfig, portConfigs, addPortConfig, updatePortConfig, deletePortConfig, asteriskConfigs, addAsteriskConfig, updateAsteriskConfig, deleteAsteriskConfig, extensions, addExtension, updateExtension, deleteExtension, ovhConfig, updateOVHConfig, settings, updateSettings, stats, refreshStats:()=>{} }}>
+    <DataContext.Provider value={{ tenants, addTenant, updateTenant, deleteTenant, serverIps, addServerIp, updateServerIp, deleteServerIp, sipNumbers, addSIPNumber, updateSIPNumber, deleteSIPNumber, carriers, addCarrier, updateCarrier, deleteCarrier, carrierRates, addCarrierRate, updateCarrierRate, deleteCarrierRate, callRecords, addCallRecord, wireGuardConfigs, addWireGuardConfig, updateWireGuardConfig, deleteWireGuardConfig, portConfigs, addPortConfig, updatePortConfig, deletePortConfig, asteriskConfigs, addAsteriskConfig, updateAsteriskConfig, deleteAsteriskConfig, extensions, addExtension, updateExtension, deleteExtension, ovhConfig, updateOVHConfig, settings, updateSettings, smsGateways, addSmsGateway, updateSmsGateway, deleteSmsGateway, smsPricing, addSmsPricing, updateSmsPricing, deleteSmsPricing, smsRecords, addSmsRecord, smsCampaigns, addSmsCampaign, updateSmsCampaign, deleteSmsCampaign, stats, refreshStats:()=>{} }}>
       {children}
     </DataContext.Provider>
   );

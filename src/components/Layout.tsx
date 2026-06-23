@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useData } from '../contexts/DataContext';
-import { LayoutDashboard, Phone, Server, Shield, Activity, Settings, Menu, X, LogOut, User, Building2, PhoneCall, DollarSign, Radio, Globe } from 'lucide-react';
+import { LayoutDashboard, Phone, Server, Shield, Activity, Settings, Menu, X, LogOut, User, Building2, PhoneCall, DollarSign, Radio, Globe, MessageSquare } from 'lucide-react';
 
 const A = '/admin';
 const superNav = [
@@ -17,6 +17,7 @@ const superNav = [
   { path: `${A}/wireguard`, label: 'WireGuard', icon: Shield },
   { path: `${A}/ports`, label: 'Port Scanner', icon: Radio },
   { path: `${A}/ovh`, label: 'OVH Relay', icon: Globe },
+  { path: `${A}/sms`, label: '📱 SMS', icon: MessageSquare },
   { path: `${A}/settings`, label: 'Settings', icon: Settings },
 ];
 
@@ -28,6 +29,7 @@ const tenantNav = [
   { path: `${A}/billing`, label: 'Billing & Rates', icon: DollarSign },
   { path: `${A}/calls`, label: 'Call Records', icon: Activity },
   { path: `${A}/ports`, label: 'Port Scanner', icon: Radio },
+  { path: `${A}/sms`, label: '📱 SMS', icon: MessageSquare },
   { path: `${A}/settings`, label: 'Settings', icon: Settings },
 ];
 

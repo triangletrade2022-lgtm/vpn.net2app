@@ -185,6 +185,58 @@ export interface OVHConfig {
   status: 'running' | 'stopped'; createdAt: string;
 }
 
+// ═══════════════════════════════════════════════════════════
+//  SMS Types
+// ═══════════════════════════════════════════════════════════
+
+export interface SmsGatewayConfig {
+  id: string;
+  provider: 'net2app' | 'custom';
+  name: string;
+  apiEndpoint: string;
+  apiKey: string;
+  senderId: string;
+  enabled: boolean;
+  defaultCountry: string;
+  createdAt: string; updatedAt: string;
+}
+
+export interface SmsPricing {
+  id: string;
+  country: string;
+  countryCode: string;
+  ratePerSms: number;
+  enabled: boolean;
+}
+
+export interface SmsRecord {
+  id: string;
+  tenantId: string;
+  clientId?: string;
+  sender: string;
+  recipient: string;
+  message: string;
+  segments: number;
+  cost: number;
+  status: 'sent' | 'delivered' | 'failed' | 'pending';
+  gateway: string;
+  createdAt: string;
+}
+
+export interface SmsCampaign {
+  id: string;
+  name: string;
+  message: string;
+  recipients: string[];
+  totalRecipients: number;
+  sentCount: number;
+  failedCount: number;
+  status: 'draft' | 'sending' | 'completed' | 'cancelled';
+  cost: number;
+  createdBy: string;
+  createdAt: string; updatedAt: string;
+}
+
 export interface DashboardStats {
   totalNumbers: number; activeNumbers: number;
   totalCarriers: number; activeCarriers: number;

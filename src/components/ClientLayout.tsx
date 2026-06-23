@@ -2,7 +2,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import {
   LayoutDashboard, Download, CreditCard, Settings,
-  LogOut, Radio, User, Menu
+  LogOut, Radio, User, Menu, MessageSquare
 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -11,6 +11,7 @@ interface Props { children: React.ReactNode }
 const navItems = [
   { path: '/portal', icon: LayoutDashboard, label: 'Dashboard', exact: true },
   { path: '/portal/downloads', icon: Download, label: 'Downloads' },
+  { path: '/portal/sms', icon: MessageSquare, label: 'SMS' },
   { path: '/portal/billing', icon: CreditCard, label: 'Billing' },
   { path: '/portal/settings', icon: Settings, label: 'Settings' },
 ];

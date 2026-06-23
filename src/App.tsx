@@ -16,9 +16,11 @@ import IpManager from './components/IpManager';
 import WireGuard from './components/WireGuard';
 import PortScanner from './components/PortScanner';
 import OVHRelay from './components/OVHRelay';
+import AdminSms from './components/AdminSms';
 import Settings from './components/Settings';
 
 // Client portal
+import ClientSms from './components/ClientSms';
 import ClientLayout from './components/ClientLayout';
 import ClientDashboard from './components/ClientDashboard';
 import ClientDownloads from './components/ClientDownloads';
@@ -74,11 +76,13 @@ function AppRoutes() {
       <Route path="/admin/wireguard" element={<AdminRoute><Layout><WireGuard /></Layout></AdminRoute>} />
       <Route path="/admin/ports" element={<AdminRoute><Layout><PortScanner /></Layout></AdminRoute>} />
       <Route path="/admin/ovh" element={<AdminRoute><Layout><OVHRelay /></Layout></AdminRoute>} />
+      <Route path="/admin/sms" element={<AdminRoute><Layout><AdminSms /></Layout></AdminRoute>} />
       <Route path="/admin/settings" element={<AdminRoute><Layout><Settings /></Layout></AdminRoute>} />
 
       {/* Client Portal */}
       <Route path="/portal" element={<ProtectedRoute><ClientLayout><ClientDashboard /></ClientLayout></ProtectedRoute>} />
       <Route path="/portal/downloads" element={<ProtectedRoute><ClientLayout><ClientDownloads /></ClientLayout></ProtectedRoute>} />
+      <Route path="/portal/sms" element={<ProtectedRoute><ClientLayout><ClientSms /></ClientLayout></ProtectedRoute>} />
       <Route path="/portal/billing" element={<ProtectedRoute><ClientLayout><ClientBilling /></ClientLayout></ProtectedRoute>} />
       <Route path="/portal/settings" element={<ProtectedRoute><ClientLayout><ClientSettings /></ClientLayout></ProtectedRoute>} />
 
