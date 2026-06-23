@@ -1,0 +1,26 @@
+[Unit]
+Description=Kamailio Subscriber Sync API Server
+Documentation=https://github.com/triangletrade2022-lgtm/vpn.net2app
+After=network.target kamailio.service
+Wants=kamailio.service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/node /opt/iptsp/kamailio-api-server.js
+Restart=always
+RestartSec=5
+User=nobody
+Group=nogroup
+NoNewPrivileges=true
+ProtectSystem=full
+ProtectHome=true
+ReadWritePaths=/var/lib/kamailio
+PrivateTmp=true
+LimitNOFILE=1024
+
+# Security hardening
+CapabilityBoundingSet=
+AmbientCapabilities=
+
+[Install]
+WantedBy=multi-user.target
