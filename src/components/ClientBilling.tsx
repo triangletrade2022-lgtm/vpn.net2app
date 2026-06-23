@@ -143,16 +143,6 @@ export default function ClientBilling() {
             {/* ── PayPal Payment ── */}
             {payMethod === 'paypal' && (
               <>
-                <div className="space-y-2 mb-4 text-sm">
-                  <div className="flex justify-between text-slate-400">
-                    <span>Amount</span>
-                    <span className="text-white font-mono">${amount.toFixed(2)}</span>
-                  </div>
-                  <div className="flex justify-between text-slate-400">
-                    <span>Payment Method</span>
-                    <span className="text-white">PayPal / Credit Card</span>
-                  </div>
-                </div>
                 <button onClick={handleTopUp}
                   className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-emerald-600 hover:bg-emerald-700 rounded-xl font-medium transition-all shadow-lg shadow-emerald-500/25">
                   {topUpStatus === 'processing' ? (

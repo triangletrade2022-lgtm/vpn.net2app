@@ -17,18 +17,17 @@ export default function LandingPage() {
   const features = [
     { icon: <Shield className="w-6 h-6" />, title: 'Multi-Tunnel Mechanism', desc: 'Deploy multiple encrypted tunnels with one click to bypass IP or network blockages. Anti-blocking technology built-in.' },
     { icon: <Zap className="w-6 h-6" />, title: 'Dynamic Port Scaling', desc: 'Increase ports at peak time, decrease at off-peak. Scale from 16 to 256 ports instantly from your portal.' },              { icon: <CreditCard className="w-6 h-6" />, title: 'Pay As You Go', desc: 'Hourly billing with no hidden costs. Top up your wallet via PayPal, USDT (TRC20), or bank transfer.' },
-    { icon: <Cpu className="w-6 h-6" />, title: '100% Self-Managed', desc: 'Install, modify, or cancel service at any time from your portal. No support calls needed.' },
-    { icon: <Download className="w-6 h-6" />, title: 'Pre-Built ISO Downloads', desc: 'Download ready-to-burn ISO images for PC, Raspberry Pi, or router. Boot and connect in under 60 seconds.' },
+    { icon: <Cpu className="w-6 h-6" />, title: '100% Self-Managed', desc: 'Install, modify, or cancel service at any time from your portal. No support calls needed.' },              { icon: <Download className="w-6 h-6" />, title: 'Open-Source ISO Builder', desc: 'Build bootable USB images for PC, Raspberry Pi, or router from our open-source scripts. Flash with Rufus or dd.' },
     { icon: <MessageSquare className="w-6 h-6" />, title: 'Multi-Channel Messaging', desc: 'Send via SMS, SMPP, HTTP, Voice OTP, OTT, RCS, Flash SMS, WhatsApp, and Telegram — all through one Net2App Hub gateway. Pay per message from your wallet.' },
     { icon: <Globe className="w-6 h-6" />, title: 'Worldwide Coverage', desc: 'Works in any country with any internet connection. Compatible with all major gateways and softswitches.' },
   ];
 
   const steps = [
-    { num: '01', title: 'Create Account', desc: 'Sign up with your email and get a $10 welcome bonus instantly.' },
-    { num: '02', title: 'Top Up Wallet', desc: 'Add credit via PayPal, credit card, or bank transfer. Funds update in minutes.' },
-    { num: '03', title: 'Deploy Server', desc: 'Choose your ports and region. Your server is ready in seconds.' },
-    { num: '04', title: 'Download ISO', desc: 'Download the pre-built ISO for your hardware (PC, Pi, or Router).' },
-    { num: '05', title: 'Boot & Connect', desc: 'Burn to USB, boot, and your tunnel is live. No configuration needed.' },
+    { num: '01', title: 'Create Account', desc: 'Sign up with Google or email and get a $10 welcome bonus instantly.' },
+    { num: '02', title: 'Top Up Wallet', desc: 'Add credit via PayPal, USDT (TRC20), card, or bank transfer. Funds update in minutes.' },
+    { num: '03', title: 'Build Your ISO', desc: 'Build a bootable USB ISO for PC, Raspberry Pi, or Router from our open-source scripts.' },
+    { num: '04', title: 'Download & Flash', desc: 'Flash the ISO to USB with Rufus or dd. Boot and your tunnel connects automatically.' },
+    { num: '05', title: 'Go Live', desc: 'No configuration needed. The VPN.net agent registers your device and starts the tunnel.' },
   ];
 
   return (
@@ -258,8 +257,8 @@ export default function LandingPage() {
                 <div className="flex items-center justify-between">
                   <span className="text-xs text-slate-500">{iso.size}</span>
                   <button className="text-sm text-cyan-400 hover:text-cyan-300 flex items-center gap-1 transition-colors"
-                    onClick={() => navigate('/register')}>
-                    <Download className="w-4 h-4" /> Download
+                    onClick={() => navigate('/portal/downloads')}>
+                    <Download className="w-4 h-4" /> Build ISO
                   </button>
                 </div>
               </div>
