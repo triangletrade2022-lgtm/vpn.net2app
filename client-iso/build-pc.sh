@@ -39,7 +39,7 @@ stage_debootstrap() {
   mkdir -p "$ROOTFS"
 
   debootstrap --arch="$ARCH" \
-    --include="linux-image-amd64,wireguard-tools,openresolv,curl,ca-certificates,iproute2,iptables,isc-dhcp-client,systemd,systemd-sysv,dbus,nano,less" \
+    --include="linux-image-amd64,wireguard-tools,openresolv,curl,ca-certificates,iproute2,iptables,isc-dhcp-client,systemd,systemd-sysv,dbus" \
     "$DEBIAN_RELEASE" "$ROOTFS" http://deb.debian.org/debian
 
   log "✅ debootstrap complete"
@@ -127,6 +127,11 @@ CFG
   # Copy squashfs
   cp "$squashfs" "$iso_dir/live/filesystem.squashfs"
 
+  # Clean up mounts before ISO gen
+  for d in proc sys dev run; do
+    umount -lf "$ROOTFS/$d" 2>/dev/null || true
+  done
+
   # Generate ISO
   xorriso -as mkisofs \
     -V "$ISO_VOLUME_ID" \
@@ -143,6 +148,15 @@ CFG
   ls -lh "$OUTPUT_ISO"
 }
 
+# ── Cleanup ──
+cleanup() {
+  log "Cleaning up mounts ..."
+  for d in proc sys dev run; do
+    umount -lf "$ROOTFS/$d" 2>/dev/null || true
+  done
+}
+trap cleanup EXIT
+
 # ═══════════════════════════════════════════════════════════
 #  MAIN
 # ═══════════════════════════════════════════════════════════
@@ -151,10 +165,10 @@ echo "  VPN.net PC/Server ISO Builder v$OS_VERSION"
 echo "═══════════════════════════════════════════════════"
 
 check_deps
-stage_debootstrap
-stage_configure
-stage_overlay
-stage_iso
+stage_debootstrap || die "debootstrap failed"
+stage_configure || log "⚠️  configure step had warnings"
+stage_overlay || log "⚠️  overlay step had warnings"
+stage_iso || die "ISO creation failed"
 
 echo ""
 echo "═══════════════════════════════════════════════════"
