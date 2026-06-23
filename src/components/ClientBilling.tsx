@@ -23,15 +23,21 @@ export default function ClientBilling() {
   const stripeReady = STRIPE_PUBLISHABLE_KEY.length > 0;
 
   const presets = [10, 25, 50, 100, 250, 500];
-  const hourly = 0.083;
+  const PORT_RATES = {
+    vpn: { label: 'VPN Port', price: 1.50 },
+    iptsp: { label: 'IPTSP Port', price: 2.00 },
+    sip: { label: 'SIP Trunk', price: 1.75 },
+  } as const;
+  const [billingService, setBillingService] = useState<'vpn' | 'iptsp' | 'sip'>('vpn');
   const ports = 32;
-  const dailyCost = (ports * hourly * 24).toFixed(2);
-  const monthlyCost = (ports * hourly * 24 * 30).toFixed(2);
+  const selectedRate = PORT_RATES[billingService];
+  const monthlyCost = (ports * selectedRate.price).toFixed(2);
+  const yearlyCost = (ports * selectedRate.price * 12).toFixed(2);
 
   const transactions = [
     { date: '2026-06-22', desc: 'PayPal Deposit', amount: 50, status: 'completed' as const },
-    { date: '2026-06-20', desc: 'Usage: 32 ports x 24h', amount: -63.74, status: 'completed' as const },
-    { date: '2026-06-18', desc: 'Usage: 16 ports x 12h', amount: -15.94, status: 'completed' as const },
+    { date: '2026-06-20', desc: 'Rent: 32 VPN Ports × $1.50', amount: -48.00, status: 'completed' as const },
+    { date: '2026-06-18', desc: 'Rent: 16 IPTSP Ports × $2.00', amount: -32.00, status: 'completed' as const },
     { date: '2026-06-15', desc: 'Welcome Bonus', amount: 10, status: 'completed' as const },
   ];
 
@@ -67,7 +73,7 @@ export default function ClientBilling() {
             </div>
             <div className="flex items-center gap-2 text-xs text-slate-500">
               <Clock className="w-3 h-3" />
-              Billed hourly — Pay As You Go
+              Monthly rent — Pay As You Go
             </div>
           </div>
 
@@ -294,23 +300,45 @@ export default function ClientBilling() {
         <div className="space-y-6">
           {/* Cost Estimate */}
           <div className="bg-white/5 border border-white/5 rounded-2xl p-6">
-            <h3 className="text-sm font-semibold text-white mb-4">Estimated Cost</h3>
+            <h3 className="text-sm font-semibold text-white mb-4">Estimated Rent</h3>
+
+            {/* Service type selector */}
+            <div className="flex gap-1.5 mb-4">
+              {(Object.keys(PORT_RATES) as Array<keyof typeof PORT_RATES>).map(key => {
+                const srv = PORT_RATES[key];
+                return (
+                  <button key={key} onClick={() => setBillingService(key)}
+                    className={`flex-1 px-2 py-1.5 rounded-lg text-[11px] font-medium transition-all ${
+                      billingService === key
+                        ? 'bg-cyan-600/30 text-cyan-300 border border-cyan-500/30'
+                        : 'bg-white/5 text-slate-500 hover:text-slate-300'
+                    }`}>
+                    {srv.label.split(' ')[0]}
+                  </button>
+                );
+              })}
+            </div>
+
             <div className="space-y-3 text-sm">
+              <div className="flex justify-between py-2 border-b border-white/5">
+                <span className="text-slate-400">Service</span>
+                <span className="text-white font-mono">{selectedRate.label}</span>
+              </div>
               <div className="flex justify-between py-2 border-b border-white/5">
                 <span className="text-slate-400">Ports</span>
                 <span className="text-white font-mono">{ports}</span>
               </div>
               <div className="flex justify-between py-2 border-b border-white/5">
-                <span className="text-slate-400">Hourly Rate</span>
-                <span className="text-white font-mono">${hourly.toFixed(3)}/port</span>
-              </div>
-              <div className="flex justify-between py-2 border-b border-white/5">
-                <span className="text-slate-400">Daily (24h)</span>
-                <span className="text-white font-mono">${dailyCost}</span>
+                <span className="text-slate-400">Per-Port Rate</span>
+                <span className="text-white font-mono">${selectedRate.price.toFixed(2)}/mo</span>
               </div>
               <div className="flex justify-between py-2">
-                <span className="text-slate-400">Monthly (30d)</span>
+                <span className="text-slate-400">Monthly Total</span>
                 <span className="text-emerald-400 font-bold font-mono">${monthlyCost}</span>
+              </div>
+              <div className="flex justify-between py-0 text-xs text-slate-600">
+                <span>Yearly</span>
+                <span className="font-mono">${yearlyCost}</span>
               </div>
             </div>
           </div>

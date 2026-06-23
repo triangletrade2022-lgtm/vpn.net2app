@@ -9,10 +9,17 @@ import {
 export default function LandingPage() {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
+  // Pricing: monthly rent per port
+  const SERVICE_TYPES = [
+    { id: 'vpn', label: 'VPN Port', price: 1.50, desc: 'Encrypted tunnel per port' },
+    { id: 'iptsp', label: 'IPTSP Port', price: 2.00, desc: 'VoIP termination per port' },
+    { id: 'sip', label: 'SIP Trunk', price: 1.75, desc: 'SIP trunking per port' },
+  ] as const;
+  const [serviceType, setServiceType] = useState<string>('vpn');
   const [ports, setPorts] = useState(32);
-  const [hours, setHours] = useState(24);
-  const monthlyCost = (ports * 0.083 * hours * 30).toFixed(2);
-  const dailyCost = (ports * 0.083 * hours).toFixed(2);
+  const selected = SERVICE_TYPES.find(s => s.id === serviceType)!;
+  const monthlyCost = (ports * selected.price).toFixed(2);
+  const yearlyCost = (ports * selected.price * 12).toFixed(2);
 
   const features = [
     { icon: <Shield className="w-6 h-6" />, title: 'Multi-Tunnel Mechanism', desc: 'Deploy multiple encrypted tunnels with one click to bypass IP or network blockages. Anti-blocking technology built-in.' },
@@ -101,7 +108,7 @@ export default function LandingPage() {
           </div>
           <div className="mt-12 flex flex-wrap items-center justify-center gap-8 text-sm text-slate-500">
             <span className="flex items-center gap-2"><Check className="w-4 h-4 text-emerald-400" /> Pay As You Go</span>
-            <span className="flex items-center gap-2"><Check className="w-4 h-4 text-emerald-400" /> Hourly Billing</span>
+            <span className="flex items-center gap-2"><Check className="w-4 h-4 text-emerald-400" /> Monthly Rent</span>
             <span className="flex items-center gap-2"><Check className="w-4 h-4 text-emerald-400" /> Self-Managed</span>
             <span className="flex items-center gap-2"><Check className="w-4 h-4 text-emerald-400" /> 300+ Router Models</span>
           </div>
@@ -161,8 +168,33 @@ export default function LandingPage() {
       <section id="pricing" className="py-20 px-4">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-4">Simple, Transparent Pricing</h2>
-            <p className="text-slate-400 text-lg">Pay only for what you use. No contracts. No surprises.</p>
+            <h2 className="text-4xl font-bold mb-4">Simple Per-Port Pricing</h2>
+            <p className="text-slate-400 text-lg">Flat monthly rent per port. No contracts. No surprises.</p>
+          </div>
+
+          {/* ── Service Type Cards ── */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
+            {SERVICE_TYPES.map(s => {
+              const selected_s = serviceType === s.id;
+              return (
+                <button key={s.id} onClick={() => setServiceType(s.id)}
+                  className={`relative p-6 rounded-2xl border-2 text-left transition-all ${
+                    selected_s
+                      ? 'bg-gradient-to-br from-cyan-600/20 to-blue-600/10 border-cyan-500/50 shadow-lg shadow-cyan-500/10'
+                      : 'bg-white/5 border-white/5 hover:border-white/20'
+                  }`}>
+                  {selected_s && (
+                    <div className="absolute top-3 right-3 w-5 h-5 rounded-full bg-cyan-500 flex items-center justify-center">
+                      <Check className="w-3 h-3 text-white" />
+                    </div>
+                  )}
+                  <p className="text-sm text-slate-400 mb-1">{s.label}</p>
+                  <p className="text-3xl font-bold text-white">${s.price.toFixed(2)}</p>
+                  <p className="text-xs text-slate-500 mt-1">/ port / month</p>
+                  <p className="text-xs text-slate-500 mt-2">{s.desc}</p>
+                </button>
+              );
+            })}
           </div>
 
           <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-white/10 rounded-3xl p-8 md:p-12">
@@ -176,45 +208,35 @@ export default function LandingPage() {
                 </div>
                 <div className="space-y-6">
                   <div>
-                    <label className="text-sm text-slate-400 mb-2 block">Ports</label>
-                    <input type="range" min="16" max="256" step="16" value={ports}
+                    <label className="text-sm text-slate-400 mb-2 block">{selected.label}s</label>
+                    <input type="range" min="1" max="256" step="1" value={ports}
                       onChange={e => setPorts(Number(e.target.value))}
                       className="w-full h-2 bg-slate-700 rounded-full appearance-none cursor-pointer accent-cyan-500" />
                     <div className="flex justify-between text-xs text-slate-500 mt-1">
-                      <span>16</span><span>64</span><span>128</span><span>256</span>
+                      <span>1</span><span>64</span><span>128</span><span>256</span>
                     </div>
-                    <p className="text-2xl font-bold text-cyan-400 mt-2">{ports} Ports</p>
-                  </div>
-                  <div>
-                    <label className="text-sm text-slate-400 mb-2 block">Hours per Day</label>
-                    <input type="range" min="1" max="24" value={hours}
-                      onChange={e => setHours(Number(e.target.value))}
-                      className="w-full h-2 bg-slate-700 rounded-full appearance-none cursor-pointer accent-cyan-500" />
-                    <div className="flex justify-between text-xs text-slate-500 mt-1">
-                      <span>1h</span><span>8h</span><span>16h</span><span>24h</span>
-                    </div>
-                    <p className="text-2xl font-bold text-cyan-400 mt-2">{hours}h / day</p>
+                    <p className="text-2xl font-bold text-cyan-400 mt-2">{ports} {selected.label}s</p>
                   </div>
                 </div>
               </div>
               <div className="bg-slate-900/50 rounded-2xl p-8 border border-white/5">
-                <p className="text-sm text-slate-400 mb-2">Estimated Cost</p>
+                <p className="text-sm text-slate-400 mb-2">Monthly Rent</p>
                 <div className="text-5xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent mb-2">
                   ${monthlyCost}
                 </div>
-                <p className="text-slate-500 text-sm mb-6">per month (30 days)</p>
+                <p className="text-slate-500 text-sm mb-6">/ month &middot; ${yearlyCost} / year</p>
                 <div className="space-y-3 text-sm">
+                  <div className="flex justify-between py-2 border-b border-white/5">
+                    <span className="text-slate-400">Service</span>
+                    <span className="text-white font-mono">{selected.label}</span>
+                  </div>
                   <div className="flex justify-between py-2 border-b border-white/5">
                     <span className="text-slate-400">Ports</span>
                     <span className="text-white font-mono">{ports}</span>
                   </div>
                   <div className="flex justify-between py-2 border-b border-white/5">
-                    <span className="text-slate-400">Hourly Rate</span>
-                    <span className="text-white font-mono">$0.083 / port</span>
-                  </div>
-                  <div className="flex justify-between py-2 border-b border-white/5">
-                    <span className="text-slate-400">Daily</span>
-                    <span className="text-white font-mono">${dailyCost}</span>
+                    <span className="text-slate-400">Per-Port Rate</span>
+                    <span className="text-white font-mono">${selected.price.toFixed(2)}/mo</span>
                   </div>
                   <div className="flex justify-between py-2">
                     <span className="text-slate-400">Monthly Total</span>
@@ -223,7 +245,7 @@ export default function LandingPage() {
                 </div>
                 <Link to="/register"
                   className="mt-6 w-full flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 rounded-xl font-medium transition-all">
-                  Get Started — ${Math.min(10, Number(monthlyCost) > 0 ? 10 : 0)} Free Credit
+                  Start Free — $10 Credit
                   <ChevronRight className="w-4 h-4" />
                 </Link>
               </div>

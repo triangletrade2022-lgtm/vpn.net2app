@@ -71,9 +71,9 @@ export function DataProvider({ children }: { children: ReactNode }) {
 
     // Tenants — all connect via OVH main IP
     setTenants([
-      { id: t1, name: 'IPTSP Bangladesh', company: 'BD Telecom Ltd', email: 'bd@iptsp.com', phone: '+8801700000001', country:'bangladesh', status:'active', maxSipNumbers:100, maxCarriers:5, maxExtensions:50, channelLimit:30, portAllocation:100, rentalAmount:150, assignedIp:OVH_MAIN, balance:500, currency:'BDT', vpnAccess:true, vpnIp:BD_RELAY, createdAt:now(), updatedAt:now() },
-      { id: t2, name: 'IPTSP India', company: 'India Telecom Ltd', email: 'in@iptsp.com', phone: '+919876543210', country:'india', status:'active', maxSipNumbers:100, maxCarriers:5, maxExtensions:50, channelLimit:50, portAllocation:150, rentalAmount:200, assignedIp:OVH_MAIN, balance:1000, currency:'INR', vpnAccess:true, vpnIp:'', createdAt:now(), updatedAt:now() },
-      { id: t3, name: 'IPTSP World', company: 'Global Telecom', email: 'world@iptsp.com', phone: '+1234567890', country:'world', status:'active', maxSipNumbers:200, maxCarriers:10, maxExtensions:100, channelLimit:100, portAllocation:200, rentalAmount:300, assignedIp:OVH_MAIN, balance:2000, currency:'USD', vpnAccess:false, createdAt:now(), updatedAt:now() },
+      { id: t1, name: 'IPTSP Bangladesh', company: 'BD Telecom Ltd', email: 'bd@iptsp.com', phone: '+8801700000001', country:'bangladesh', status:'active', maxSipNumbers:100, maxCarriers:5, maxExtensions:50, channelLimit:30, portAllocation:100, rentalAmount:1.50, assignedIp:OVH_MAIN, balance:500, currency:'USD', vpnAccess:true, vpnIp:BD_RELAY, createdAt:now(), updatedAt:now() },
+      { id: t2, name: 'IPTSP India', company: 'India Telecom Ltd', email: 'in@iptsp.com', phone: '+919876543210', country:'india', status:'active', maxSipNumbers:100, maxCarriers:5, maxExtensions:50, channelLimit:50, portAllocation:150, rentalAmount:2.00, assignedIp:OVH_MAIN, balance:1000, currency:'USD', vpnAccess:true, vpnIp:'', createdAt:now(), updatedAt:now() },
+      { id: t3, name: 'IPTSP World', company: 'Global Telecom', email: 'world@iptsp.com', phone: '+1234567890', country:'world', status:'active', maxSipNumbers:200, maxCarriers:10, maxExtensions:100, channelLimit:100, portAllocation:200, rentalAmount:1.75, assignedIp:OVH_MAIN, balance:2000, currency:'USD', vpnAccess:false, createdAt:now(), updatedAt:now() },
     ]);
 
     // Server IPs

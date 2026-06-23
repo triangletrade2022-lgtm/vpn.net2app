@@ -13,7 +13,7 @@ export default function TenantsPage() {
 
   const filtered = tenants.filter(t => t.name.toLowerCase().includes(search.toLowerCase()) || t.company.toLowerCase().includes(search.toLowerCase()));
 
-  const [form, setForm] = useState({ name: '', company: '', email: '', phone: '', country: 'bangladesh' as Tenant['country'], status: 'active' as Tenant['status'], maxSipNumbers: 100, maxCarriers: 5, maxExtensions: 50, channelLimit: 30, portAllocation: 100, rentalAmount: 150, assignedIp: '103.51.128.9', balance: 500, currency: 'BDT', vpnAccess: false, vpnIp: '' });
+  const [form, setForm] = useState({ name: '', company: '', email: '', phone: '', country: 'bangladesh' as Tenant['country'], status: 'active' as Tenant['status'], maxSipNumbers: 100, maxCarriers: 5, maxExtensions: 50, channelLimit: 30, portAllocation: 100, rentalAmount: 1.50, assignedIp: '103.51.128.9', balance: 500, currency: 'USD', vpnAccess: false, vpnIp: '' });
 
   const handleSubmit = () => {
     if (editing) updateTenant(editing.id, form);
@@ -23,7 +23,7 @@ export default function TenantsPage() {
 
   const openModal = (t?: Tenant) => {
     if (t) { setEditing(t); setForm({ name:t.name, company:t.company, email:t.email, phone:t.phone, country:t.country, status:t.status, maxSipNumbers:t.maxSipNumbers, maxCarriers:t.maxCarriers, maxExtensions:t.maxExtensions, channelLimit:t.channelLimit, portAllocation:t.portAllocation, rentalAmount:t.rentalAmount, assignedIp:t.assignedIp||'', balance:t.balance, currency:t.currency, vpnAccess:t.vpnAccess, vpnIp:t.vpnIp||'' }); }
-    else { setEditing(null); setForm({ name:'', company:'', email:'', phone:'', country:'bangladesh', status:'active', maxSipNumbers:100, maxCarriers:5, maxExtensions:50, channelLimit:30, portAllocation:100, rentalAmount:150, assignedIp:'103.51.128.9', balance:500, currency:'BDT', vpnAccess:false, vpnIp:'' }); }
+    else { setEditing(null); setForm({ name:'', company:'', email:'', phone:'', country:'bangladesh', status:'active', maxSipNumbers:100, maxCarriers:5, maxExtensions:50, channelLimit:30, portAllocation:100, rentalAmount:1.50, assignedIp:'103.51.128.9', balance:500, currency:'USD', vpnAccess:false, vpnIp:'' }); }
     setShowModal(true);
   };
 
