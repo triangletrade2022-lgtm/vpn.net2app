@@ -3,19 +3,24 @@ import { useAuth } from '../contexts/AuthContext';
 import {
   CreditCard, Wallet, DollarSign,
   Clock, Check, Copy,
-  Loader, Banknote, Bitcoin
+  Loader, Banknote, Bitcoin, Settings
 } from 'lucide-react';
 
 // ── USDT TRC20 Wallet — Configured by Admin ──
 const USDT_WALLET = 'TRn9FNxxYUCwLv7WYvnsxwyicbxx6tTH4R';
 const USDT_NETWORK = 'TRC20';
 
+// ── Stripe — set your pk_live key here once you have a Stripe account ──
+// Get your key at: https://dashboard.stripe.com/apikeys
+const STRIPE_PUBLISHABLE_KEY = ''; // ← paste your pk_live_... key here
+
 export default function ClientBilling() {
   const { user } = useAuth();
   const [amount, setAmount] = useState(25);
   const [topUpStatus, setTopUpStatus] = useState<'idle' | 'processing' | 'success'>('idle');
   const [copied, setCopied] = useState<string | null>(null);
-  const [payMethod, setPayMethod] = useState<'paypal' | 'usdt'>('paypal');
+  const [payMethod, setPayMethod] = useState<'paypal' | 'card' | 'usdt'>('paypal');
+  const stripeReady = STRIPE_PUBLISHABLE_KEY.length > 0;
 
   const presets = [10, 25, 50, 100, 250, 500];
   const hourly = 0.083;
@@ -117,13 +122,21 @@ export default function ClientBilling() {
                 }`}>
                 <CreditCard className="w-4 h-4" /> PayPal
               </button>
+              <button onClick={() => setPayMethod('card')}
+                className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${
+                  payMethod === 'card'
+                    ? 'bg-emerald-600 text-white shadow-lg'
+                    : 'text-slate-400 hover:text-white'
+                }`}>
+                <CreditCard className="w-4 h-4" /> Visa/MC
+              </button>
               <button onClick={() => setPayMethod('usdt')}
                 className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${
                   payMethod === 'usdt'
                     ? 'bg-emerald-600 text-white shadow-lg'
                     : 'text-slate-400 hover:text-white'
                 }`}>
-                <Bitcoin className="w-4 h-4" /> USDT (TRC20)
+                <Bitcoin className="w-4 h-4" /> USDT
               </button>
             </div>
 
@@ -153,6 +166,63 @@ export default function ClientBilling() {
                 <p className="text-xs text-slate-500 mt-3 text-center">
                   Secure payment processed by PayPal. Credit card accepted via guest checkout.
                 </p>
+              </>
+            )}
+
+            {/* ── Stripe Card Payment ── */}
+            {payMethod === 'card' && (
+              <>
+                {stripeReady ? (
+                  <div className="bg-gradient-to-br from-indigo-600/10 to-purple-600/10 border border-indigo-500/20 rounded-xl p-5 space-y-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-indigo-500/20 flex items-center justify-center">
+                        <CreditCard className="w-5 h-5 text-indigo-400" />
+                      </div>
+                      <div>
+                        <p className="text-white font-semibold">Visa / Mastercard</p>
+                        <p className="text-xs text-slate-400">Pay securely with your credit or debit card via Stripe.</p>
+                      </div>
+                    </div>
+
+                    <button onClick={handleTopUp}
+                      className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-700 rounded-xl font-medium transition-all shadow-lg shadow-indigo-500/25">
+                      {topUpStatus === 'processing' ? (
+                        <><Loader className="w-4 h-4 animate-spin" /> Processing...</>
+                      ) : topUpStatus === 'success' ? (
+                        <><Check className="w-4 h-4" /> Payment Successful!</>
+                      ) : (
+                        <><CreditCard className="w-4 h-4" /> Pay ${amount} with Card</>
+                      )}
+                    </button>
+
+                    <div className="flex items-center justify-center gap-3 text-xs text-slate-500">
+                      <span className="font-mono text-[11px] tracking-widest text-slate-400">VISA</span>
+                      <span className="font-mono text-[11px] tracking-widest text-slate-400">MC</span>
+                      <span>Powered by <span className="text-indigo-400">Stripe</span></span>
+                    </div>
+                    <p className="text-[11px] text-slate-600 text-center">🔒 Secured by Stripe. Your card details never touch our servers.</p>
+                  </div>
+                ) : (
+                  <div className="bg-gradient-to-br from-indigo-600/10 to-purple-600/10 border border-indigo-500/20 rounded-xl p-5">
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="w-10 h-10 rounded-xl bg-indigo-500/20 flex items-center justify-center">
+                        <Settings className="w-5 h-5 text-indigo-400" />
+                      </div>
+                      <div>
+                        <p className="text-white font-semibold">Visa / Mastercard</p>
+                        <p className="text-xs text-slate-400">Card payments via Stripe</p>
+                      </div>
+                    </div>
+                    <div className="p-3 bg-yellow-600/10 border border-yellow-500/20 rounded-xl text-xs text-yellow-300">
+                      Stripe not yet configured. Set your <code className="font-mono text-white">STRIPE_PUBLISHABLE_KEY</code> in{' '}
+                      <span className="font-mono text-indigo-400">ClientBilling.tsx</span> to enable card payments.
+                    </div>
+                    <a href="https://dashboard.stripe.com/apikeys" target="_blank" rel="noopener noreferrer"
+                      className="mt-3 inline-flex items-center gap-2 text-xs text-indigo-400 hover:text-indigo-300 transition-colors">
+                      Get your Stripe API key →
+                    </a>
+                  </div>
+                )}
               </>
             )}
 
