@@ -19,7 +19,7 @@ export default function LandingPage() {
     { icon: <Zap className="w-6 h-6" />, title: 'Dynamic Port Scaling', desc: 'Increase ports at peak time, decrease at off-peak. Scale from 16 to 256 ports instantly from your portal.' },              { icon: <CreditCard className="w-6 h-6" />, title: 'Pay As You Go', desc: 'Hourly billing with no hidden costs. Top up your wallet via PayPal, USDT (TRC20), or bank transfer.' },
     { icon: <Cpu className="w-6 h-6" />, title: '100% Self-Managed', desc: 'Install, modify, or cancel service at any time from your portal. No support calls needed.' },
     { icon: <Download className="w-6 h-6" />, title: 'Pre-Built ISO Downloads', desc: 'Download ready-to-burn ISO images for PC, Raspberry Pi, or router. Boot and connect in under 60 seconds.' },
-    { icon: <MessageSquare className="w-6 h-6" />, title: 'SMS Platform Integration', desc: 'Send bulk SMS campaigns and integrate with Net2App Hub gateway via self-service portal. Pay per message from your wallet.' },
+    { icon: <MessageSquare className="w-6 h-6" />, title: 'Multi-Channel Messaging', desc: 'Send via SMS, SMPP, HTTP, Voice OTP, OTT, RCS, Flash SMS, WhatsApp, and Telegram — all through one Net2App Hub gateway. Pay per message from your wallet.' },
     { icon: <Globe className="w-6 h-6" />, title: 'Worldwide Coverage', desc: 'Works in any country with any internet connection. Compatible with all major gateways and softswitches.' },
   ];
 

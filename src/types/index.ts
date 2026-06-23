@@ -189,6 +189,29 @@ export interface OVHConfig {
 //  SMS Types
 // ═══════════════════════════════════════════════════════════
 
+export type SmsChannel =
+  | 'sms'           // Standard SMS (SMPP/HTTP)
+  | 'smpp'          // SMPP protocol direct
+  | 'http'          // HTTP API
+  | 'voice_otp'     // Voice OTP call
+  | 'ott'           // Over-The-Top messaging
+  | 'rcs'           // Rich Communication Services
+  | 'flash'         // Flash SMS (Class 0)
+  | 'whatsapp'      // Official WhatsApp Business API
+  | 'telegram';     // Telegram Bot API
+
+export const SMS_CHANNELS: { key: SmsChannel; label: string; icon: string; desc: string }[] = [
+  { key: 'sms', label: 'SMS', icon: '💬', desc: 'Standard SMS (SMPP/HTTP)' },
+  { key: 'smpp', label: 'SMPP', icon: '🔌', desc: 'SMPP Protocol Direct' },
+  { key: 'http', label: 'HTTP API', icon: '🌐', desc: 'HTTP API Integration' },
+  { key: 'voice_otp', label: 'Voice OTP', icon: '📞', desc: 'Voice OTP Call' },
+  { key: 'ott', label: 'OTT', icon: '📱', desc: 'Over-The-Top Messaging (iMessage, Viber, etc.)' },
+  { key: 'rcs', label: 'RCS', icon: '💎', desc: 'Rich Communication Services' },
+  { key: 'flash', label: 'Flash SMS', icon: '⚡', desc: 'Flash SMS (Class 0, pops up on screen)' },
+  { key: 'whatsapp', label: 'WhatsApp', icon: '💚', desc: 'Official WhatsApp Business API' },
+  { key: 'telegram', label: 'Telegram', icon: '✈️', desc: 'Telegram Bot API' },
+];
+
 export interface SmsGatewayConfig {
   id: string;
   provider: 'net2app' | 'custom';
@@ -198,14 +221,16 @@ export interface SmsGatewayConfig {
   senderId: string;
   enabled: boolean;
   defaultCountry: string;
+  enabledChannels: SmsChannel[];
   createdAt: string; updatedAt: string;
 }
 
 export interface SmsPricing {
   id: string;
+  channel: SmsChannel;
   country: string;
   countryCode: string;
-  ratePerSms: number;
+  ratePerUnit: number;
   enabled: boolean;
 }
 
@@ -213,6 +238,7 @@ export interface SmsRecord {
   id: string;
   tenantId: string;
   clientId?: string;
+  channel: SmsChannel;
   sender: string;
   recipient: string;
   message: string;
@@ -226,6 +252,7 @@ export interface SmsRecord {
 export interface SmsCampaign {
   id: string;
   name: string;
+  channel: SmsChannel;
   message: string;
   recipients: string[];
   totalRecipients: number;
