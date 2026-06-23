@@ -7,6 +7,8 @@ export interface User {
   role: 'super_admin' | 'tenant_admin' | 'client';
   tenantId?: string;
   balance?: number;
+  googleId?: string;
+  avatar?: string;
   createdAt: string;
 }
 

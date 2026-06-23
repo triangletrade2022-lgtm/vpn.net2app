@@ -8,6 +8,7 @@ interface AuthContextType {
   activeTenantId: string | null;
   setActiveTenantId: (id: string | null) => void;
   login: (username: string, password: string) => Promise<'admin' | 'client' | false>;
+  googleLogin: (credential: string) => Promise<'admin' | 'client' | false>;
   register: (data: ClientRegistration) => Promise<{ success: boolean; error?: string }>;
   logout: () => void;
   isLoading: boolean;
@@ -65,6 +66,53 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     ['vpnnet_session', 'iptsp_token', 'iptsp_user', 'iptsp_active_tenant'].forEach(k => localStorage.removeItem(k));
   };
 
+  // Decode Google JWT client-side to get user info
+  const decodeGoogleJWT = (token: string): { email: string; name: string; sub: string; picture?: string } | null => {
+    try {
+      const payload = token.split('.')[1];
+      const decoded = JSON.parse(atob(payload.replace(/-/g, '+').replace(/_/g, '/')));
+      return { email: decoded.email, name: decoded.name, sub: decoded.sub, picture: decoded.picture };
+    } catch { return null; }
+  };
+
+  const googleLogin = async (credential: string): Promise<'admin' | 'client' | false> => {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        const info = decodeGoogleJWT(credential);
+        if (!info) { resolve(false); return; }
+
+        // Check if Google user exists in registered clients
+        const existing = clients.find(c => c.googleId === info.sub || c.email.toLowerCase() === info.email.toLowerCase());
+        if (existing) {
+          const u: User = {
+            id: existing.id, username: existing.username, email: existing.email,
+            role: 'client', balance: existing.balance, googleId: existing.googleId,
+            avatar: info.picture, createdAt: existing.createdAt,
+          };
+          const t = btoa(JSON.stringify(u));
+          setUser(u); setToken(t); saveSession(u, t);
+          resolve('client');
+        } else {
+          // Auto-register if Google user not found
+          const newClient: StoredClient = {
+            id: genId(), username: info.email, email: info.email,
+            role: 'client', _password: '', googleId: info.sub,
+            balance: 10, createdAt: new Date().toISOString(),
+          };
+          setClients(prev => [...prev, newClient]);
+          const u: User = {
+            id: newClient.id, username: newClient.username, email: newClient.email,
+            role: 'client', balance: 10, googleId: newClient.googleId,
+            avatar: info.picture, createdAt: newClient.createdAt,
+          };
+          const t = btoa(JSON.stringify(u));
+          setUser(u); setToken(t); saveSession(u, t);
+          resolve('client');
+        }
+      }, 500);
+    });
+  };
+
   const login = async (username: string, password: string): Promise<'admin' | 'client' | false> => {
     return new Promise(resolve => {
       setTimeout(() => {
@@ -116,7 +164,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   return (
     <AuthContext.Provider value={{
       isAuthenticated: !!user, user, token, activeTenantId, setActiveTenantId,
-      login, register, logout, isLoading,
+      login, googleLogin, register, logout, isLoading,
       isSuperAdmin: user?.role === 'super_admin',
       isClient: user?.role === 'client',
       registeredClients: clients,

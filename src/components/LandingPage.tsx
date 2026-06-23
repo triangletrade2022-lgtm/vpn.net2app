@@ -50,7 +50,7 @@ export default function LandingPage() {
               <a href="#downloads" className="text-sm text-slate-300 hover:text-white transition-colors">Downloads</a>
               <Link to="/login" className="text-sm text-slate-300 hover:text-white transition-colors">Sign In</Link>
               <Link to="/register" className="px-5 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 rounded-xl text-sm font-medium transition-all shadow-lg shadow-cyan-500/25">
-                Get Started Free
+                Sign Up Free
               </Link>
             </div>
             <button className="md:hidden p-2" onClick={() => setMenuOpen(!menuOpen)}>
@@ -77,7 +77,7 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto text-center relative">
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-cyan-500/10 border border-cyan-500/20 rounded-full text-cyan-300 text-sm mb-8">
             <Zap className="w-4 h-4" />
-            Now with Multi-Tunnel Anti-Blocking
+            Sign up with Google — Get $10 Free Credit
           </div>
           <h1 className="text-5xl md:text-7xl font-bold leading-tight mb-6">
             VoIP Bandwidth{' '}
