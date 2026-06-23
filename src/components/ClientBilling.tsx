@@ -3,14 +3,19 @@ import { useAuth } from '../contexts/AuthContext';
 import {
   CreditCard, Wallet, DollarSign,
   Clock, Check, Copy,
-  Loader, Banknote
+  Loader, Banknote, Bitcoin
 } from 'lucide-react';
+
+// ── USDT TRC20 Wallet — Configured by Admin ──
+const USDT_WALLET = 'TRn9FNxxYUCwLv7WYvnsxwyicbxx6tTH4R';
+const USDT_NETWORK = 'TRC20';
 
 export default function ClientBilling() {
   const { user } = useAuth();
   const [amount, setAmount] = useState(25);
   const [topUpStatus, setTopUpStatus] = useState<'idle' | 'processing' | 'success'>('idle');
   const [copied, setCopied] = useState<string | null>(null);
+  const [payMethod, setPayMethod] = useState<'paypal' | 'usdt'>('paypal');
 
   const presets = [10, 25, 50, 100, 250, 500];
   const hourly = 0.083;
@@ -102,20 +107,111 @@ export default function ClientBilling() {
               </div>
             </div>
 
-            <button onClick={handleTopUp}
-              className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-emerald-600 hover:bg-emerald-700 rounded-xl font-medium transition-all shadow-lg shadow-emerald-500/25">
-              {topUpStatus === 'processing' ? (
-                <><Loader className="w-4 h-4 animate-spin" /> Processing...</>
-              ) : topUpStatus === 'success' ? (
-                <><Check className="w-4 h-4" /> Credit Added!</>
-              ) : (
-                <><CreditCard className="w-4 h-4" /> Add ${amount} Credit via PayPal</>
-              )}
-            </button>
+            {/* ── Payment Method Toggle ── */}
+            <div className="flex gap-2 p-1 bg-white/5 rounded-xl">
+              <button onClick={() => setPayMethod('paypal')}
+                className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${
+                  payMethod === 'paypal'
+                    ? 'bg-emerald-600 text-white shadow-lg'
+                    : 'text-slate-400 hover:text-white'
+                }`}>
+                <CreditCard className="w-4 h-4" /> PayPal
+              </button>
+              <button onClick={() => setPayMethod('usdt')}
+                className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${
+                  payMethod === 'usdt'
+                    ? 'bg-emerald-600 text-white shadow-lg'
+                    : 'text-slate-400 hover:text-white'
+                }`}>
+                <Bitcoin className="w-4 h-4" /> USDT (TRC20)
+              </button>
+            </div>
 
-            <p className="text-xs text-slate-500 mt-3 text-center">
-              Secure payment processed by PayPal. Credit card accepted via guest checkout.
-            </p>
+            {/* ── PayPal Payment ── */}
+            {payMethod === 'paypal' && (
+              <>
+                <div className="space-y-2 mb-4 text-sm">
+                  <div className="flex justify-between text-slate-400">
+                    <span>Amount</span>
+                    <span className="text-white font-mono">${amount.toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between text-slate-400">
+                    <span>Payment Method</span>
+                    <span className="text-white">PayPal / Credit Card</span>
+                  </div>
+                </div>
+                <button onClick={handleTopUp}
+                  className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-emerald-600 hover:bg-emerald-700 rounded-xl font-medium transition-all shadow-lg shadow-emerald-500/25">
+                  {topUpStatus === 'processing' ? (
+                    <><Loader className="w-4 h-4 animate-spin" /> Processing...</>
+                  ) : topUpStatus === 'success' ? (
+                    <><Check className="w-4 h-4" /> Credit Added!</>
+                  ) : (
+                    <><CreditCard className="w-4 h-4" /> Add ${amount} Credit via PayPal</>
+                  )}
+                </button>
+                <p className="text-xs text-slate-500 mt-3 text-center">
+                  Secure payment processed by PayPal. Credit card accepted via guest checkout.
+                </p>
+              </>
+            )}
+
+            {/* ── USDT (TRC20) Payment ── */}
+            {payMethod === 'usdt' && (
+              <>
+                <div className="bg-gradient-to-br from-orange-600/10 to-yellow-600/10 border border-orange-500/20 rounded-xl p-5 space-y-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-orange-500/20 flex items-center justify-center">
+                      <Bitcoin className="w-5 h-5 text-orange-400" />
+                    </div>
+                    <div>
+                      <p className="text-white font-semibold">USDT ({USDT_NETWORK})</p>
+                      <p className="text-xs text-slate-400">Send USDT to the wallet below. Credit updates within minutes after confirmation.</p>
+                    </div>
+                  </div>
+
+                  <div className="p-4 bg-white/5 rounded-xl border border-white/5">
+                    <p className="text-xs text-slate-500 mb-2">Wallet Address ({USDT_NETWORK})</p>
+                    <div className="flex items-center gap-2 bg-slate-900 rounded-lg p-3 border border-white/5">
+                      <code className="flex-1 text-sm font-mono text-orange-300 break-all">
+                        {USDT_WALLET}
+                      </code>
+                      <button onClick={() => {navigator.clipboard.writeText(USDT_WALLET); setCopied('usdt'); setTimeout(() => setCopied(null), 2000);}}
+                        className="flex-shrink-0 p-2 bg-white/5 hover:bg-white/10 rounded-lg transition-all">
+                        {copied === 'usdt' ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4 text-slate-400" />}
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2 text-xs text-slate-400">
+                    <div className="flex items-start gap-2">
+                      <span className="w-5 h-5 rounded-full bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-[10px] flex-shrink-0">1</span>
+                      Copy the wallet address above
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <span className="w-5 h-5 rounded-full bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-[10px] flex-shrink-0">2</span>
+                      Send <span className="text-white font-mono">${amount.toFixed(2)} USDT</span> to this address on <span className="text-orange-300">{USDT_NETWORK}</span> network
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <span className="w-5 h-5 rounded-full bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-[10px] flex-shrink-0">3</span>
+                      Contact us with your TXID to get instant credit
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <span className="w-5 h-5 rounded-full bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-[10px] flex-shrink-0">4</span>
+                      ⚠️ Only send <span className="text-orange-300">USDT on {USDT_NETWORK}</span> network. Other networks will be lost!
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-center gap-4 p-3 bg-white/5 rounded-xl">
+                    <button onClick={() => {navigator.clipboard.writeText(USDT_WALLET); setCopied('usdt'); setTimeout(() => setCopied(null), 2000);}}
+                      className="flex items-center gap-2 px-5 py-2.5 bg-orange-600 hover:bg-orange-700 rounded-xl text-sm font-medium transition-all shadow-lg shadow-orange-500/25">
+                      {copied === 'usdt' ? <><Check className="w-4 h-4" /> Copied!</> : <><Copy className="w-4 h-4" /> Copy Wallet</>}
+                    </button>
+                  </div>
+                  <p className="text-[11px] text-slate-600 text-center">ℹ️ Once payment is confirmed, email your TXID to billing@vpn.net for instant credit</p>
+                </div>
+              </>
+            )}
           </div>
 
           {/* Bank Transfer Info */}

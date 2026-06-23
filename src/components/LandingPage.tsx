@@ -16,8 +16,7 @@ export default function LandingPage() {
 
   const features = [
     { icon: <Shield className="w-6 h-6" />, title: 'Multi-Tunnel Mechanism', desc: 'Deploy multiple encrypted tunnels with one click to bypass IP or network blockages. Anti-blocking technology built-in.' },
-    { icon: <Zap className="w-6 h-6" />, title: 'Dynamic Port Scaling', desc: 'Increase ports at peak time, decrease at off-peak. Scale from 16 to 256 ports instantly from your portal.' },
-    { icon: <CreditCard className="w-6 h-6" />, title: 'Pay As You Go', desc: 'Hourly billing with no hidden costs. Top up your wallet anytime via PayPal, credit card, or bank transfer.' },
+    { icon: <Zap className="w-6 h-6" />, title: 'Dynamic Port Scaling', desc: 'Increase ports at peak time, decrease at off-peak. Scale from 16 to 256 ports instantly from your portal.' },              { icon: <CreditCard className="w-6 h-6" />, title: 'Pay As You Go', desc: 'Hourly billing with no hidden costs. Top up your wallet via PayPal, USDT (TRC20), or bank transfer.' },
     { icon: <Cpu className="w-6 h-6" />, title: '100% Self-Managed', desc: 'Install, modify, or cancel service at any time from your portal. No support calls needed.' },
     { icon: <Download className="w-6 h-6" />, title: 'Pre-Built ISO Downloads', desc: 'Download ready-to-burn ISO images for PC, Raspberry Pi, or router. Boot and connect in under 60 seconds.' },
     { icon: <Globe className="w-6 h-6" />, title: 'Worldwide Coverage', desc: 'Works in any country with any internet connection. Compatible with all major gateways and softswitches.' },
