@@ -9,7 +9,7 @@ import {
 } from 'lucide-react';
 
 export default function Dashboard() {
-  const { stats, sipNumbers } = useData();
+  const { stats, sipNumbers, settings } = useData();
 
   const StatCard = ({ 
     title, 
@@ -170,8 +170,8 @@ export default function Dashboard() {
         <h2 className="text-xl font-semibold text-white mb-4">System Information</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="p-4 bg-white/5 rounded-xl">
-            <p className="text-sm text-blue-200 mb-1">Asterisk Server</p>
-            <p className="text-lg font-mono text-white">192.168.1.100</p>
+            <p className="text-sm text-blue-200 mb-1">SIP Server</p>
+            <p className="text-lg font-mono text-white">{settings?.asteriskServerIp || '51.161.45.126'}</p>
           </div>
           <div className="p-4 bg-white/5 rounded-xl">
             <p className="text-sm text-blue-200 mb-1">WireGuard Server</p>

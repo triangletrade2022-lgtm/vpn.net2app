@@ -2,10 +2,10 @@ import { useState } from 'react';
 import { useData } from '../contexts/DataContext';
 import { useAuth } from '../contexts/AuthContext';
 import { Extension } from '../types';
-import { Plus, Edit2, Trash2, Copy, Check, Search, X, Phone, Key, User, Network } from 'lucide-react';
+import { Plus, Edit2, Trash2, Copy, Check, Search, X, Phone, Key, User, Network, Server } from 'lucide-react';
 
 export default function Extensions() {
-  const { extensions, addExtension, updateExtension, deleteExtension } = useData();
+  const { extensions, addExtension, updateExtension, deleteExtension, settings } = useData();
   const { user, activeTenantId } = useAuth();
   const tid = user?.tenantId || activeTenantId || '';
 
@@ -100,16 +100,47 @@ max_contacts=${ext.maxContacts}
         </button>
       </div>
 
-      <div className="bg-cyan-600/20 border border-cyan-500/30 rounded-2xl p-6">
-        <div className="flex items-start gap-4">
-          <Phone className="w-8 h-8 text-cyan-400 flex-shrink-0" />
-          <div>
-            <h3 className="text-lg font-semibold text-white mb-2">Extension Management</h3>
-            <p className="text-cyan-200 text-sm">
-              Extensions are internal numbers used by staff to make and receive calls. Each extension has a number, password,
-              and can be configured for different contexts (Bangladesh Inbound or India Outbound). Extensions register through
-              the WireGuard tunnel to reach the Asterisk server.
-            </p>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="bg-cyan-600/20 border border-cyan-500/30 rounded-2xl p-6">
+          <div className="flex items-start gap-4">
+            <Phone className="w-8 h-8 text-cyan-400 flex-shrink-0" />
+            <div>
+              <h3 className="text-lg font-semibold text-white mb-2">Extension Management</h3>
+              <p className="text-cyan-200 text-sm">
+                Extensions are internal numbers used by staff to make and receive calls. Each extension has a number, password,
+                and can be configured for different contexts (Bangladesh Inbound or India Outbound). Extensions register through
+                the WireGuard tunnel to reach the SIP server.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="bg-emerald-600/20 border border-emerald-500/30 rounded-2xl p-6">
+          <div className="flex items-start gap-4">
+            <Server className="w-8 h-8 text-emerald-400 flex-shrink-0" />
+            <div className="flex-1">
+              <h3 className="text-lg font-semibold text-white mb-2">📱 SIP Phone Configuration</h3>
+              <p className="text-emerald-200 text-sm mb-3">
+                Configure your SIP phone/softphone with these settings to register and make calls.
+              </p>
+              <div className="space-y-2">
+                <div className="flex justify-between items-center p-2 bg-white/5 rounded-lg">
+                  <span className="text-emerald-200 text-sm">Server</span>
+                  <span className="text-white font-mono text-sm">{settings?.asteriskServerIp || '51.161.45.126'}</span>
+                </div>
+                <div className="flex justify-between items-center p-2 bg-white/5 rounded-lg">
+                  <span className="text-emerald-200 text-sm">Port</span>
+                  <span className="text-white font-mono text-sm">5060</span>
+                </div>
+                <div className="flex justify-between items-center p-2 bg-white/5 rounded-lg">
+                  <span className="text-emerald-200 text-sm">Transport</span>
+                  <span className="text-white font-mono text-sm">UDP</span>
+                </div>
+                <div className="flex justify-between items-center p-2 bg-white/5 rounded-lg">
+                  <span className="text-emerald-200 text-sm">Codec Priority</span>
+                  <span className="text-white font-mono text-sm">G.729 → G.711 → GSM</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

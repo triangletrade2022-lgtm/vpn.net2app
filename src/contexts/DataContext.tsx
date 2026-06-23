@@ -113,12 +113,28 @@ export function DataProvider({ children }: { children: ReactNode }) {
       { id:gid(), tenantId:t1, carrierId:c1, callId:'CALL-001', caller:'09648472999', callee:'8801712345678', direction:'outbound', type:'voice', startTime:now(), answerTime:now(), endTime:now(), duration:180, billableDuration:180, ratePerMinute:0.02, totalCost:0.06, carrierName:'BD IPTSP Main', prefix:'88017', status:'answered' },
     ]);
 
+    const extBd = (ext: string, name: string, pw: string) => ({ id:gid(), tenantId:t1, extension:ext, name, password:pw, context:'bangladesh-inbound' as const, nat:true, qualify:true, dtmfMode:'rfc2833' as const, transport:'udp' as const, status:'active' as const, codecs:['ulaw','alaw'] as string[], callerid:`"${name}" <${ext}>`, maxContacts:2, createdAt:now(), updatedAt:now() });
     setExt([
-      { id:gid(), tenantId:t1, extension:'2001', name:'BD Office 1', password:genPass(), context:'bangladesh-inbound', nat:true, qualify:true, dtmfMode:'rfc2833', transport:'udp', status:'active', codecs:['ulaw','alaw'], callerid:'"BD Office 1" <2001>', maxContacts:2, createdAt:now(), updatedAt:now() },
-      { id:gid(), tenantId:t2, extension:'3001', name:'IN Office', password:genPass(), context:'india-outbound', nat:false, qualify:true, dtmfMode:'rfc2833', transport:'udp', status:'active', codecs:['g729','ulaw'], callerid:'"IN Office" <3001>', maxContacts:1, createdAt:now(), updatedAt:now() },
+      extBd('2001', 'BD Office 1', '1234'),
+      extBd('2002', 'BD Office 2', '1234'),
+      extBd('2003', 'BD Office 3', '1234'),
+      extBd('2004', 'BD Office 4', '1234'),
+      extBd('2005', 'BD Office 5', '1234'),
+      extBd('2010', 'BD Manager', '1234'),
     ]);
 
-    setSip([{ id:gid(), tenantId:t1, number:BD_IPTSP_USER, username:BD_IPTSP_USER, password:BD_IPTSP_PASS, sipServer:BD_IPTSP_SIP, ipAddress:BD_IPTSP_SIP, port:5080, country:'bangladesh', status:'active', connectivityStatus:'verified', lastVerified:now(), prefix:'097', createdAt:now(), updatedAt:now() }]);
+    const sipBd = (n: string, p: string) => ({ id:gid(), tenantId:t1, number:n, username:n, password:p, sipServer:OVH_MAIN, ipAddress:OVH_MAIN, port:5060, country:'bangladesh' as const, status:'active' as const, connectivityStatus:'verified' as const, lastVerified:now(), prefix:'097', createdAt:now(), updatedAt:now() });
+    const sipIn = (n: string, p: string) => ({ id:gid(), tenantId:t2, number:n, username:n, password:p, sipServer:OVH_MAIN, ipAddress:OVH_MAIN, port:5060, country:'india' as const, status:'active' as const, connectivityStatus:'verified' as const, lastVerified:now(), prefix:'0091', createdAt:now(), updatedAt:now() });
+    setSip([
+      sipBd('09648472999', '09648472999999'),
+      sipBd('09648473000', 'pass1234'),
+      sipBd('09648473001', 'pass1234'),
+      sipBd('09648473002', 'pass1234'),
+      sipBd('09648473003', 'pass1234'),
+      sipBd('09648473004', 'pass1234'),
+      sipBd('09648473005', 'pass1234'),
+      sipIn('+914223532220', 'TrunkPassword123'),
+    ]);
   };
 
   const addTenant = (t: Omit<Tenant, 'id'|'createdAt'|'updatedAt'>) => setTenants(p=>[...p,{...t,id:gid(),createdAt:now(),updatedAt:now()}]);

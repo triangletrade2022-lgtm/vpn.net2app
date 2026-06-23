@@ -14,7 +14,7 @@ import {
 } from 'lucide-react';
 
 export default function WireGuard() {
-  const { wireGuardConfigs, addWireGuardConfig, updateWireGuardConfig, deleteWireGuardConfig } = useData();
+  const { wireGuardConfigs, addWireGuardConfig, updateWireGuardConfig, deleteWireGuardConfig, settings } = useData();
   const [showModal, setShowModal] = useState(false);
   const [editingConfig, setEditingConfig] = useState<WireGuardConfig | null>(null);
   const [showConfig, setShowConfig] = useState<WireGuardConfig | null>(null);
@@ -154,17 +154,49 @@ PersistentKeepalive = 25
         </button>
       </div>
 
-      {/* Info Banner */}
-      <div className="bg-purple-600/20 border border-purple-500/30 rounded-2xl p-6">
-        <div className="flex items-start gap-4">
-          <Shield className="w-8 h-8 text-purple-400 flex-shrink-0" />
-          <div>
-            <h3 className="text-lg font-semibold text-white mb-2">WireGuard for SIP Trunking</h3>
-            <p className="text-purple-200 text-sm">
-              WireGuard tunnels provide secure connectivity for SIP traffic between Bangladesh and India. 
-              All SIP numbers register through the WireGuard relay to bypass port restrictions. 
-              Port 5060 is blocked in Bangladesh - use alternative ports (5080, 5081, 5082) for UDP traffic.
-            </p>
+      {/* Server Info Banner */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="bg-purple-600/20 border border-purple-500/30 rounded-2xl p-6">
+          <div className="flex items-start gap-4">
+            <Shield className="w-8 h-8 text-purple-400 flex-shrink-0" />
+            <div>
+              <h3 className="text-lg font-semibold text-white mb-2">WireGuard for SIP Trunking</h3>
+              <p className="text-purple-200 text-sm">
+                WireGuard tunnels provide secure connectivity for SIP traffic between Bangladesh and India. 
+                All SIP numbers register through the WireGuard relay to bypass port restrictions. 
+                Port 5060 is blocked in Bangladesh — use alternative ports (5080, 5081, 5082) for UDP traffic.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="bg-emerald-600/20 border border-emerald-500/30 rounded-2xl p-6">
+          <div className="flex items-start gap-4">
+            <div className="p-2 bg-emerald-600 rounded-lg">
+              <Activity className="w-6 h-6 text-white" />
+            </div>
+            <div className="flex-1">
+              <h3 className="text-lg font-semibold text-white mb-2">Kamailio SIP Server</h3>
+              <div className="space-y-2">
+                <div className="flex justify-between items-center p-2 bg-white/5 rounded-lg">
+                  <span className="text-emerald-200 text-sm">Server IP</span>
+                  <span className="text-white font-mono text-sm">{settings?.asteriskServerIp || '51.161.45.126'}</span>
+                </div>
+                <div className="flex justify-between items-center p-2 bg-white/5 rounded-lg">
+                  <span className="text-emerald-200 text-sm">SIP Port</span>
+                  <span className="text-white font-mono text-sm">5060 (UDP/TCP)</span>
+                </div>
+                <div className="flex justify-between items-center p-2 bg-white/5 rounded-lg">
+                  <span className="text-emerald-200 text-sm">Status</span>
+                  <span className="text-green-400 flex items-center gap-2">
+                    <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+                    Running
+                  </span>
+                </div>
+              </div>
+              <p className="text-emerald-200/70 text-xs mt-3">
+                SIP clients register at <span className="font-mono text-white">{settings?.asteriskServerIp || '51.161.45.126'}:5060</span> with username/password from the subscriber database.
+              </p>
+            </div>
           </div>
         </div>
       </div>
