@@ -1,4 +1,4 @@
-import { Download, Server, Cpu, Radio, FileText, ChevronDown, Check, ExternalLink } from 'lucide-react';
+import { Download, Server, Cpu, Radio, FileText, ChevronDown, Check, ExternalLink, Code2, Terminal } from 'lucide-react';
 
 export default function ClientDownloads() {
   const isos = [
@@ -12,11 +12,11 @@ export default function ClientDownloads() {
       updated: '2026-06-20',
       features: ['CMER Optimization Engine', 'WireGuard Tunnel Client', 'Auto-config on first boot', 'Web-based status dashboard', 'SSH access enabled'],
       instructions: [
-        'Download the ISO file below',
+        'Build the ISO from source (see Build Guide below)',
         'Burn to USB using Rufus (Windows) or dd (Linux/Mac)',
         'Boot the target machine from the USB drive',
-        'Login with username: root, password: vpnnet',
-        'Run: vpnnet-connect to activate your tunnel',
+        'The VPN.net agent starts automatically via systemd',
+        'Check your portal to verify the tunnel is connected',
       ],
     },
     {
@@ -54,6 +54,18 @@ export default function ClientDownloads() {
       ],
     },
   ];
+
+  const buildCmds = `# Clone the repo
+  git clone https://github.com/triangletrade2022-lgtm/vpn.net2app.git
+  cd vpn.net2app/client-iso
+  
+  # Build all 3 images
+  make all
+  
+  # Or build individually
+  make pc      # PC/Server x86_64 ISO
+  make pi      # Raspberry Pi ARM64 image
+  make router  # Router firmware (OpenWRT)`;
 
   const tools = [
     { name: 'Rufus', desc: 'Burn ISO to USB on Windows', url: 'https://rufus.ie' },
@@ -100,9 +112,10 @@ export default function ClientDownloads() {
 
             {/* Download Button */}
             <div className="px-6 pb-6">
-              <button className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 rounded-xl text-sm font-medium transition-all shadow-lg shadow-cyan-500/20">
+              <button onClick={() => document.getElementById('build-guide')?.scrollIntoView({ behavior: 'smooth' })}
+                className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 rounded-xl text-sm font-medium transition-all shadow-lg shadow-cyan-500/20">
                 <Download className="w-4 h-4" />
-                Download {iso.title}
+                Build {iso.title}
               </button>
             </div>
 
@@ -125,6 +138,53 @@ export default function ClientDownloads() {
             </details>
           </div>
         ))}
+      </div>
+
+      {/* Build Guide */}
+      <div id="build-guide" className="bg-gradient-to-br from-emerald-600/10 to-cyan-600/10 border border-emerald-500/20 rounded-2xl p-6">
+        <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+          <Terminal className="w-5 h-5 text-emerald-400" />
+          Build ISOs from Source
+        </h3>
+        <p className="text-sm text-emerald-200 mb-4">
+          The ISO images are built from open-source scripts in our GitHub repo. 
+          Build them yourself on any Debian/Ubuntu machine — no special hardware needed.
+        </p>
+
+        <div className="bg-slate-950/80 border border-white/5 rounded-xl p-4 mb-4 overflow-x-auto">
+          <pre className="text-xs text-emerald-300 font-mono leading-relaxed whitespace-pre">{buildCmds}</pre>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <a href="https://github.com/triangletrade2022-lgtm/vpn.net2app/tree/master/client-iso"
+            target="_blank" rel="noopener noreferrer"
+            className="flex items-center justify-between p-4 bg-white/5 rounded-xl hover:bg-white/[0.07] transition-all group">
+            <div className="flex items-center gap-3">
+              <Code2 className="w-5 h-5 text-slate-400 group-hover:text-emerald-400 transition-colors" />
+              <div>
+                <p className="text-sm font-medium text-white group-hover:text-emerald-400 transition-colors">Source Code</p>
+                <p className="text-xs text-slate-500">client-iso/ directory</p>
+              </div>
+            </div>
+            <ExternalLink className="w-4 h-4 text-slate-500 group-hover:text-emerald-400 transition-colors" />
+          </a>
+          <a href="https://github.com/triangletrade2022-lgtm/vpn.net2app/blob/master/client-iso/README.md"
+            target="_blank" rel="noopener noreferrer"
+            className="flex items-center justify-between p-4 bg-white/5 rounded-xl hover:bg-white/[0.07] transition-all group">
+            <div className="flex items-center gap-3">
+              <FileText className="w-5 h-5 text-slate-400 group-hover:text-emerald-400 transition-colors" />
+              <div>
+                <p className="text-sm font-medium text-white group-hover:text-emerald-400 transition-colors">Build Docs</p>
+                <p className="text-xs text-slate-500">README & instructions</p>
+              </div>
+            </div>
+            <ExternalLink className="w-4 h-4 text-slate-500 group-hover:text-emerald-400 transition-colors" />
+          </a>
+          <div className="p-4 bg-white/5 rounded-xl">
+            <p className="text-sm font-medium text-emerald-300 mb-1">Docker Build</p>
+            <p className="text-xs text-slate-400">docker build -t vpnnet-iso-builder . && docker run --privileged vpnnet-iso-builder</p>
+          </div>
+        </div>
       </div>
 
       {/* Tools */}

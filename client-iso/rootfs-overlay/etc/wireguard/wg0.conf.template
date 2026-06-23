@@ -1,0 +1,18 @@
+# ═══════════════════════════════════════════════════════════
+#  VPN.net WireGuard Client Config
+#  This is a TEMPLATE — will be replaced by the registration
+#  agent after calling home to the VPN.net API server.
+# ═══════════════════════════════════════════════════════════
+
+[Interface]
+# These values will be filled by the agent
+PrivateKey = 
+Address = 10.0.0.X/24
+DNS = 8.8.8.8, 1.1.1.1
+
+[Peer]
+# OVH Hub Server
+PublicKey = 
+AllowedIPs = 0.0.0.0/0
+Endpoint = 51.161.45.126:51820
+PersistentKeepalive = 25

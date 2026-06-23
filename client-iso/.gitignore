@@ -1,0 +1,10 @@
+# Build artifacts (large binary files)
+builds/
+*.iso
+*.img
+*.bin
+
+# Temp files
+*.log
+*.tmp
+*.swp
