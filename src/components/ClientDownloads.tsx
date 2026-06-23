@@ -1,9 +1,6 @@
-import { useState } from 'react';
-import { Download, Server, Cpu, Radio, FileText, ChevronDown, Check, Copy, ExternalLink } from 'lucide-react';
+import { Download, Server, Cpu, Radio, FileText, ChevronDown, Check, ExternalLink } from 'lucide-react';
 
 export default function ClientDownloads() {
-  const [copied, setCopied] = useState<string | null>(null);
-
   const isos = [
     {
       id: 'pc',
@@ -63,12 +60,6 @@ export default function ClientDownloads() {
     { name: 'Raspberry Pi Imager', desc: 'Flash Pi ISO to microSD', url: 'https://www.raspberrypi.com/software/' },
     { name: 'Etcher', desc: 'Cross-platform USB burner', url: 'https://www.balena.io/etcher/' },
   ];
-
-  const copyCmd = (text: string, id: string) => {
-    navigator.clipboard.writeText(text);
-    setCopied(id);
-    setTimeout(() => setCopied(null), 2000);
-  };
 
   return (
     <div className="space-y-8">

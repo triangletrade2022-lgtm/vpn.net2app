@@ -3,7 +3,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { User, Mail, Globe, Phone, Save, Check, Shield, Key, Bell } from 'lucide-react';
 
 export default function ClientSettings() {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const [saved, setSaved] = useState(false);
 
   const handleSave = () => {

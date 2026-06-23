@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import {
   Globe, Shield, Zap, Cpu, Download, CreditCard,
-  ChevronRight, Server, Radio, Wifi, Layers,
-  Activity, BarChart3, ArrowRight, Check, Menu, X, Github
+  ChevronRight, Server, Radio,
+  BarChart3, ArrowRight, Check, Menu, X
 } from 'lucide-react';
 
 export default function LandingPage() {

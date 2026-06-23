@@ -1,9 +1,8 @@
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import {
-  Server, Download, CreditCard, Activity, Radio,
-  Wifi, Shield, ArrowRight, Zap, Globe, Clock,
-  CheckCircle, AlertCircle
+  Download, CreditCard, Activity, Radio,
+  Shield, Globe, Clock, CheckCircle
 } from 'lucide-react';
 import { useData } from '../contexts/DataContext';
 

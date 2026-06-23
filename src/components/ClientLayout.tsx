@@ -2,7 +2,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import {
   LayoutDashboard, Download, CreditCard, Settings,
-  LogOut, Radio, User, Wallet, ChevronRight, Menu, X
+  LogOut, Radio, User, Menu
 } from 'lucide-react';
 import { useState } from 'react';
 

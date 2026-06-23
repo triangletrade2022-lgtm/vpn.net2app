@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import {
-  CreditCard, Wallet, DollarSign, ArrowUpRight,
-  Clock, Check, Copy, ExternalLink, ChevronRight,
-  Circle, Activity, Loader, AlertCircle, Banknote
+  CreditCard, Wallet, DollarSign,
+  Clock, Check, Copy,
+  Loader, Banknote
 } from 'lucide-react';
 
 export default function ClientBilling() {
