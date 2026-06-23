@@ -4,30 +4,31 @@ import { useAuth } from '../contexts/AuthContext';
 import { useData } from '../contexts/DataContext';
 import { LayoutDashboard, Phone, Server, Shield, Activity, Settings, Menu, X, LogOut, User, Building2, PhoneCall, DollarSign, Radio, Globe } from 'lucide-react';
 
+const A = '/admin';
 const superNav = [
-  { path: '/', label: 'Dashboard', icon: LayoutDashboard },
-  { path: '/tenants', label: 'Tenants', icon: Building2 },
-  { path: '/ips', label: '🌐 IP Pool', icon: Server },
-  { path: '/bangladesh', label: '🇧🇩 BD SIP', icon: Phone },
-  { path: '/extensions', label: '📞 Extensions', icon: PhoneCall },
-  { path: '/carriers', label: 'Carriers', icon: Server },
-  { path: '/billing', label: 'Billing & Rates', icon: DollarSign },
-  { path: '/calls', label: 'Call Records', icon: Activity },
-  { path: '/wireguard', label: 'WireGuard', icon: Shield },
-  { path: '/ports', label: 'Port Scanner', icon: Radio },
-  { path: '/ovh', label: 'OVH Relay', icon: Globe },
-  { path: '/settings', label: 'Settings', icon: Settings },
+  { path: `${A}/`, label: 'Dashboard', icon: LayoutDashboard },
+  { path: `${A}/tenants`, label: 'Tenants', icon: Building2 },
+  { path: `${A}/ips`, label: '🌐 IP Pool', icon: Server },
+  { path: `${A}/bangladesh`, label: '🇧🇩 BD SIP', icon: Phone },
+  { path: `${A}/extensions`, label: '📞 Extensions', icon: PhoneCall },
+  { path: `${A}/carriers`, label: 'Carriers', icon: Server },
+  { path: `${A}/billing`, label: 'Billing & Rates', icon: DollarSign },
+  { path: `${A}/calls`, label: 'Call Records', icon: Activity },
+  { path: `${A}/wireguard`, label: 'WireGuard', icon: Shield },
+  { path: `${A}/ports`, label: 'Port Scanner', icon: Radio },
+  { path: `${A}/ovh`, label: 'OVH Relay', icon: Globe },
+  { path: `${A}/settings`, label: 'Settings', icon: Settings },
 ];
 
 const tenantNav = [
-  { path: '/', label: 'Dashboard', icon: LayoutDashboard },
-  { path: '/bangladesh', label: '🇧🇩 BD SIP', icon: Phone },
-  { path: '/extensions', label: '📞 Extensions', icon: PhoneCall },
-  { path: '/carriers', label: 'Carriers', icon: Server },
-  { path: '/billing', label: 'Billing & Rates', icon: DollarSign },
-  { path: '/calls', label: 'Call Records', icon: Activity },
-  { path: '/ports', label: 'Port Scanner', icon: Radio },
-  { path: '/settings', label: 'Settings', icon: Settings },
+  { path: `${A}/`, label: 'Dashboard', icon: LayoutDashboard },
+  { path: `${A}/bangladesh`, label: '🇧🇩 BD SIP', icon: Phone },
+  { path: `${A}/extensions`, label: '📞 Extensions', icon: PhoneCall },
+  { path: `${A}/carriers`, label: 'Carriers', icon: Server },
+  { path: `${A}/billing`, label: 'Billing & Rates', icon: DollarSign },
+  { path: `${A}/calls`, label: 'Call Records', icon: Activity },
+  { path: `${A}/ports`, label: 'Port Scanner', icon: Radio },
+  { path: `${A}/settings`, label: 'Settings', icon: Settings },
 ];
 
 export default function Layout({ children }: { children: React.ReactNode }) {
@@ -75,7 +76,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
             {navItems.map(item => {
               const Icon = item.icon;
-              const isActive = location.pathname === item.path;
+              const isActive = item.path === `${A}/` 
+                ? (location.pathname === '/admin' || location.pathname === '/admin/') 
+                : location.pathname === item.path;
               return (
                 <Link key={item.path} to={item.path} onClick={() => setSidebarOpen(false)}
                   className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${isActive ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30' : 'text-blue-200 hover:bg-white/10 hover:text-white'}`}>

@@ -3,10 +3,20 @@
 // ═══════════════════════════════════════════════════════════
 
 export interface User {
-  id: string; username: string;
-  role: 'super_admin' | 'tenant_admin' | 'tenant_operator';
+  id: string; username: string; email: string;
+  role: 'super_admin' | 'tenant_admin' | 'client';
   tenantId?: string;
+  balance?: number;
   createdAt: string;
+}
+
+export interface ClientRegistration {
+  email: string;
+  password: string;
+  company: string;
+  name: string;
+  phone: string;
+  country: string;
 }
 
 export interface Tenant {
