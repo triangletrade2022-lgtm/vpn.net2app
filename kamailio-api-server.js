@@ -105,7 +105,7 @@ function getSubscriberByUsername(username) {
 // ── CORS Headers ───────────────────────────────────────────────────
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+  'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS',
   'Access-Control-Allow-Headers': 'Content-Type',
 };
 
@@ -394,6 +394,20 @@ async function handleRequest(req, res) {
     } catch (err) {
       return error(res, 500, `Heartbeat error: ${err.message}`);
     }
+  }
+
+  // ── DELETE /api/device/revoke/:id — Revoke a device
+  match = pathname.match(/^\/api\/device\/revoke\/([^/]+)$/);
+  if (match && method === 'DELETE') {
+    const deviceId = decodeURIComponent(match[1]);
+    const idx = devices.findIndex(d => d.device_id === deviceId);
+    if (idx === -1) {
+      return error(res, 404, `Device '${deviceId}' not found`);
+    }
+    devices.splice(idx, 1);
+    saveDevices();
+    console.log(`Device revoked: ${deviceId}`);
+    return json(res, 200, { revoked: true, device_id: deviceId, message: 'Device revoked successfully' });
   }
 
   // ── GET /api/devices — List all registered devices

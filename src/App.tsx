@@ -17,6 +17,7 @@ import WireGuard from './components/WireGuard';
 import PortScanner from './components/PortScanner';
 import OVHRelay from './components/OVHRelay';
 import AdminSms from './components/AdminSms';
+import DeviceManager from './components/DeviceManager';
 import Settings from './components/Settings';
 
 // Client portal
@@ -76,6 +77,7 @@ function AppRoutes() {
       <Route path="/admin/wireguard" element={<AdminRoute><Layout><WireGuard /></Layout></AdminRoute>} />
       <Route path="/admin/ports" element={<AdminRoute><Layout><PortScanner /></Layout></AdminRoute>} />
       <Route path="/admin/ovh" element={<AdminRoute><Layout><OVHRelay /></Layout></AdminRoute>} />
+      <Route path="/admin/devices" element={<AdminRoute><Layout><DeviceManager /></Layout></AdminRoute>} />
       <Route path="/admin/sms" element={<AdminRoute><Layout><AdminSms /></Layout></AdminRoute>} />
       <Route path="/admin/settings" element={<AdminRoute><Layout><Settings /></Layout></AdminRoute>} />
 

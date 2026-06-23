@@ -2,13 +2,14 @@ import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useData } from '../contexts/DataContext';
-import { LayoutDashboard, Phone, Server, Shield, Activity, Settings, Menu, X, LogOut, User, Building2, PhoneCall, DollarSign, Radio, Globe, MessageSquare } from 'lucide-react';
+import { LayoutDashboard, Phone, Server, Shield, Activity, Settings, Menu, X, LogOut, User, Building2, PhoneCall, DollarSign, Radio, Globe, MessageSquare, Monitor } from 'lucide-react';
 
 const A = '/admin';
 const superNav = [
   { path: `${A}/`, label: 'Dashboard', icon: LayoutDashboard },
   { path: `${A}/tenants`, label: 'Tenants', icon: Building2 },
   { path: `${A}/ips`, label: '🌐 IP Pool', icon: Server },
+  { path: `${A}/devices`, label: '📱 Devices', icon: Monitor },
   { path: `${A}/bangladesh`, label: '🇧🇩 BD SIP', icon: Phone },
   { path: `${A}/extensions`, label: '📞 Extensions', icon: PhoneCall },
   { path: `${A}/carriers`, label: 'Carriers', icon: Server },
